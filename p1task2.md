@@ -13,7 +13,8 @@ _Explain the steps performed and include relevant code snippets from the steps y
 Masukkan screenshot hasil eksekusi program atau proses yang relevan.  
 _Insert screenshots of program execution results or other relevant processes._
 
-- 
+<img width="948" height="228" alt="image" src="https://github.com/user-attachments/assets/20de3a49-01c4-46bb-8c7e-c29509ab56b5" />
+
 
 ### Kode Penuh _(Full Code)_
 Masukkan kode lengkap yang digunakan untuk menyelesaikan bagian ini.  
