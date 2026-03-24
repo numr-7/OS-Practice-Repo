@@ -7,8 +7,26 @@ _(Steps & Code Snippets, Screenshot, Full Code)_
 Jelaskan langkah-langkah yang dilakukan dan berikan potongan kode dari langkah-langkah yang kalian jelaskan jika ada.  
 _Explain the steps performed and include relevant code snippets from the steps you describe if applicable._
 
-- 
+File analisi_a.sh di isi dengan command awk,
+Menggunakan `-F','` option untuk mengganti separator data menjadi **(,)**  
+```bash
+awk -F','
+``` 
 
+Menggunakan _if_ function untuk mengambil data yang dibutuhkan, yaitu **durasi_detik diatas 7199** dan **tanggal 07-03-2026**
+```
+if($3 > 7199 && $4 ~ /07-03-2026/)
+```
+
+Menggunakan fungsi _built-in_ dari awk, yaitu `gsub` untuk mengganti (_) dengan ( )
+```
+gsub(/_/, " ", $2)
+```
+
+Lalu print 
+```
+printf($1 " " $2 " selama " $3 " detik pada 07032026 \n")
+```  
 ### Screenshot _(Screenshot)_
 Masukkan screenshot hasil eksekusi program atau proses yang relevan.  
 _Insert screenshots of program execution results or other relevant processes._
@@ -21,7 +39,7 @@ Masukkan kode lengkap yang digunakan untuk menyelesaikan bagian ini.
 _Insert the full source code used to solve this section._
 
 ```bash
-awk -F',' '{if($3 > 7199 && $4 ~ /07-03-2026/) {gsub("_", " ", $2);  printf($1 " " $2 " selama " $3 " detik pada 07032026 \n");}}' losiento.csv 
+awk -F',' '{if($3 > 7199 && $4 ~ /07-03-2026/) {gsub(/_/, " ", $2);  printf($1 " " $2 " selama " $3 " detik pada 07032026 \n");}}' losiento.csv 
 ```
 ## B. Langkah-langkah & Potongan Kode, Screenshot, Kode Penuh
 
