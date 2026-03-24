@@ -38,8 +38,8 @@ _Insert screenshots of program execution results or other relevant processes._
 ### Kode Penuh _(Full Code)_
 Masukkan kode lengkap yang digunakan untuk menyelesaikan bagian ini.  
 _Insert the full source code used to solve this section._
-
-- 
+''''bash
+awk -F',' '{if($3 > 7199 && $4 ~ /07-03-2026/) {gsub("_", " ", $2);  printf($1 " " $2 " selama " $3 " detik pada 07032026 \n");}}' losiento.csv
 
 ## C. Langkah-langkah & Potongan Kode, Screenshot, Kode Penuh
 
