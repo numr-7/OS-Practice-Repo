@@ -123,19 +123,80 @@ END{
 Jelaskan langkah-langkah yang dilakukan dan berikan potongan kode dari langkah-langkah yang kalian jelaskan jika ada.  
 _Explain the steps performed and include relevant code snippets from the steps you describe if applicable._
 
-- 
+1. Membaca `input` dari user menggunakan fungsi `read -p` agar bisa menampilkan pesan sebelum input dimmulai.
+```bash
+read -p "Nama : " nama;
+read -p "Aktivitas : " akt;
+read -p "Durasi : " dur;
+read -p "Waktu mulai : " wak;
+```
+
+2. Memasukkan hasil `input` kedalam file `losiento.csv`.
+```bash
+echo "$nama,$akt,$dur,$wak" >> losiento.csv;
+```
+
+3. Memisah **hari, bulan dan tahun** dari `input` waktu menggunakan _string extraction_  
+   yaitu `${[string]:[offset]:[length]}` yang kemudian digabungkan di variable `tm`.
+```bash
+dd=${wak:0:2};
+mm=${wak:3:2};
+yy=${wak:6:4};
+tm="$dd$mm$yy";
+```
+
+4. Menggabungkan variable `nama` dan `tm` menjadi satu variable yang kemudian akan menjadi nama file.
+```bash
+fname="${nama}_${tm}.log";
+```
+
+5. Terakhir ada _statement_ `if` untuk memisah jenis output
+   menggunakan _condition_ `[ $dur -gt 21600 ]` (-gt adalah _greater than_)  
+   yang kemudian di tulis di file `$fname`.
+```bash
+if [ $dur -gt 21600 ]; then
+ echo "[ALERT] $wak : $nama $akt selama $dur detik" > "$fname";
+else
+ echo "[ACCEPTED] $wak : $nama $akt selama $dur detik" > "$fname";
+fi
+```
 
 ### Screenshot _(Screenshot)_
 Masukkan screenshot hasil eksekusi program atau proses yang relevan.  
 _Insert screenshots of program execution results or other relevant processes._
 
-- 
+<img width="690" height="161" alt="image" src="https://github.com/user-attachments/assets/ad7f90fd-2288-4562-9716-901aad8b884b" />
+<img width="688" height="162" alt="Screenshot from 2026-03-25 20-19-28" src="https://github.com/user-attachments/assets/6bf27005-791e-4fba-8539-56b68e08aa87" />
+
 
 ### Kode Penuh _(Full Code)_
 Masukkan kode lengkap yang digunakan untuk menyelesaikan bagian ini.  
 _Insert the full source code used to solve this section._
 
-- 
+[input_aktivitas.sh](https://github.com/user-attachments/files/26243911/input_aktivitas.sh)
+```bash
+#!/bin/bash
+
+read -p "Nama : " nama;
+read -p "Aktivitas : " akt;
+read -p "Durasi : " dur;
+read -p "Waktu mulai : " wak;
+
+echo "$nama,$akt,$dur,$wak" >> losiento.csv;
+
+dd=${wak:0:2};
+mm=${wak:3:2};
+yy=${wak:6:4};
+tm="$dd$mm$yy";
+
+fname="${nama}_${tm}.log";
+
+if [ $dur -gt 21600 ]; then
+ echo "[ALERT] $wak : $nama $akt selama $dur detik" > "$fname";
+else
+ echo "[ACCEPTED] $wak : $nama $akt selama $dur detik" > "$fname";
+fi
+```
 
 ## D. Langkah-langkah & Potongan Kode, Screenshot, Kode Penuh
 
