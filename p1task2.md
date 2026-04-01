@@ -1,4 +1,4 @@
-[analisis_b.sh](https://github.com/user-attachments/files/26230704/analisis_b.sh)# Task 2 - Monyet Punch dan Ayam Wilson
+# Task 2 - Monyet Punch dan Ayam Wilson
 
 ## A. Langkah-langkah & Potongan Kode, Screenshot, Kode Penuh  
 _(Steps & Code Snippets, Screenshot, Full Code)_
