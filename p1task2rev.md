@@ -32,7 +32,7 @@ tm=(h*60) + m;
 ```bash
 if($1=="Punch" && tm>=720 && $2 ~ /tidur/){
 	ptcount++;}
-else if($1=="Wilson" && tm>=4800 && tm<=1140 && $2 ~ /makan/){
+else if($1=="Wilson" && tm>=480 && tm<=1140 && $2 ~ /makan/){
 	wmcount++;}
 ```
 5. Kemudian menggunakan fungsi `END` untuk melakukan `print` agar hanya di lakukan sekali di akhir fungsi `awk`
@@ -74,14 +74,35 @@ END{
 }' losiento.csv
 ```
 
-## C. Langkah-langkah & Potongan Kode, Screenshot, Kode Penuh  
+## D. Langkah-langkah & Potongan Kode, Screenshot, Kode Penuh  
 _(Steps & Code Snippets, Screenshot, Full Code)_
 
 ### Langkah-langkah & Potongan Kode _(Steps & Code Snippets)_
 Jelaskan langkah-langkah yang dilakukan dan berikan potongan kode dari langkah-langkah yang kalian jelaskan jika ada.  
 _Explain the steps performed and include relevant code snippets from the steps you describe if applicable._
 
-- 
+1. Mengambil setiap file `.log` yang ada di directory menggunakan `ls *.log`  
+   kemudian memotong menggunakan `cut -d` untuk mengekstrak hanya tanggalnya serta  
+   mengurutkan menggunakan `sort -u` (`-u` untuk menghilangkan file duplikat). 
+```bash
+dates=$(ls *.log | cut -d'_' -f2 | cut -d'.' -f1 | sort -u);
+```
+
+2. Menginisiasi loop untuk setiap value/tanggal yang ada di `$dates`. Kemudian melakukan zip terhadap  
+   file menggunakan `zip -q` (`-q` digunakan agar command zip tidak mengeluarkan output).  
+   Kemudian print yang harus di print. Lalu menunjukan file yang telah di zip menggunakan `unzip -Z1`  
+   (`-Z1` digunakan sebagai indikator kalau command `unzip` hanya menampil informasi/isi zip nya).
+```bash
+for date in $dates; do
+        zip -q "backup_log_${date}.zip" *_${date}.log;
+
+        printf "Log berhasil diarsipkan\n.";
+        printf "Isi arsip:\n";
+        unzip -Z1 "backup_log_${date}.zip";
+
+        rm *_${date}.log;
+done
+```
 
 ### Screenshot _(Screenshot)_
 Masukkan screenshot hasil eksekusi program atau proses yang relevan.  
@@ -94,7 +115,6 @@ _Insert screenshots of program execution results or other relevant processes._
 Masukkan kode lengkap yang digunakan untuk menyelesaikan bagian ini.  
 _Insert the full source code used to solve this section._
 
-- 
 ```bash
 #!/bin/bash
 
@@ -111,28 +131,93 @@ for date in $dates; do
 done
 ```
 
-
-# Task [] - []
-
-## []. Langkah-langkah & Potongan Kode, Screenshot, Kode Penuh  
+## E. Langkah-langkah & Potongan Kode, Screenshot, Kode Penuh  
 _(Steps & Code Snippets, Screenshot, Full Code)_
 
 ### Langkah-langkah & Potongan Kode _(Steps & Code Snippets)_
 Jelaskan langkah-langkah yang dilakukan dan berikan potongan kode dari langkah-langkah yang kalian jelaskan jika ada.  
 _Explain the steps performed and include relevant code snippets from the steps you describe if applicable._
 
-- 
+1. Pertama-tama, set directory dimana script ini akan berjalan menggunakan `cd`.
+```bash
+cd ~/Documents/sisop-modul-1-a10/task-2/revisi;
+```
+
+2. Sama seperti script `backup_log.sh`, saya menggunakan command cut untuk memotong dan memisahhkan tanggal dari  
+   nama file zip yang ada. Kemudian di sort menggunakan `sort -u`.
+```bash
+tgl=$(ls *.zip | cut -d'_' -f3 | cut -d'.' -f1 | sort -u);
+```
+
+3. Kemudian memulai for loop untuk semua value yang ada di `$tgl`. Di dalam loop ini, saya mengambil substring dari  
+   variabel `$tgl` dan memisahnya pada menjadi hari, bulan, serta tahun sendiri-sendiri.
+```bash
+for tanggal in $tgl; do
+	dd=${tanggal:0:2};
+	mm=${tanggal:2:2};
+	yy=${tanggal:4:4};
+```
+
+4. Lalu saya mengkonversi menjadi detik sejah waktu _Epoch_ (yaitu 1970) dengan menggunakan `date -d [...] +%s`. Hal yang sama  
+   saya lakukan dengan mengambil waktu hari ini script ini di jalankan dan mengkonversi menjadi _Epoch time._
+```bash
+	fsec=$(date -d "${yy}-${mm}-${dd}" +%s);
+	tsec=$(date +%s);
+```
+
+5. Kemudian saya mencari perbedaan dari kedua waktu serta mengkonversi detik menjadi hari lagi. 
+```bash
+	diffday=$(( (tsec - fsec) / 86400 ));
+```
+
+6. Kemmudian menjalankan `if` statement untuk mencari yang menentukan zip folder mana yang akan di remove dengan fungsi `-rm`.
+```bash
+	if [ "$diffday" -gt 7 ]; then
+		rm "backup_log_${tanggal}.zip";
+	fi
+```
+
+7. Untuk konfigurasi cronjob akan menjalankan `backup_log.sh` setiap hari di jam 23:59 serta  
+   `remove_archive.sh` setiap hari di jam 02:34.
+```sh
+59 23 * * * ~/Documents/sisop-modul-1-a10/task-2/revisi/backup_log.sh
+34 02 * * * ~/Documents/sisop-modul-1-a10/task-2/revisi/remove_archive.sh
+```
 
 ### Screenshot _(Screenshot)_
 Masukkan screenshot hasil eksekusi program atau proses yang relevan.  
 _Insert screenshots of program execution results or other relevant processes._
 
-- 
+<img width="1172" height="176" alt="image" src="https://github.com/user-attachments/assets/ce48abec-f950-4cc8-a58d-c7b142f9f3d6" />
+
 
 ### Kode Penuh _(Full Code)_
 Masukkan kode lengkap yang digunakan untuk menyelesaikan bagian ini.  
 _Insert the full source code used to solve this section._
 
-- 
+```bash
+#!/bin/bash
 
-...
+cd ~/Documents/sisop-modul-1-a10/task-2/revisi;
+
+tgl=$(ls *.zip | cut -d'_' -f3 | cut -d'.' -f1 | sort -u);
+
+for tanggal in $tgl; do
+	dd=${tanggal:0:2};
+	mm=${tanggal:2:2};
+	yy=${tanggal:4:4};
+
+	fsec=$(date -d "${yy}-${mm}-${dd}" +%s);
+	tsec=$(date +%s);
+	diffday=$(( (tsec - fsec) / 86400 ));
+
+	if [ "$diffday" -gt 7 ]; then
+		rm "backup_log_${tanggal}.zip";
+	fi
+done
+```
+
+```sh
+59 23 * * * ~/Documents/sisop-modul-1-a10/task-2/revisi/backup_log.sh
+34 02 * * * ~/Documents/sisop-modul-1-a10/task-2/revisi/remove_archive.sh
+```
